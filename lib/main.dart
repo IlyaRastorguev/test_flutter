@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_flutter/networkUtils/api/test.dart';
 
+import 'dto/test_dto.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -30,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
-  Future<http.Response> test;
+  Future<Test> test;
 
   void getUser(int selectIndex) {
     if (selectIndex == 1) {
@@ -46,20 +48,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   showData () {
     if (test != null) {
-      return FutureBuilder<http.Response>(
+      return FutureBuilder<Test>(
         future: test,
         builder: (context, snap) {
-          return ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  title: Text('Almost'),
-                  subtitle: Text('get data'),
-                ),
-              )
-            ],
-          );
+          if (snap.hasData) {
+            return ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Card(
+                  child: ListTile(
+                    title: Text(snap.data.title),
+                    subtitle: Text(snap.data.description),
+                  ),
+                )
+              ],
+            );
+          } else if(snap.hasError) {
+            return Text(snap.data.error);
+          }
+
+          return Text('');
         },
       );
     }
@@ -76,9 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
             showData(),
           ],
         ),
