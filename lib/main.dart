@@ -52,17 +52,16 @@ class _MyHomePageState extends State<MyHomePage> {
         future: test,
         builder: (context, snap) {
           if (snap.hasData) {
-            return SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.all(10.0),
-                child: Align(
+            return Container(
+              margin: const EdgeInsets.all(10.0),
+              child: Align(
                   alignment: Alignment.topCenter,
                   child: ListView(
-                    shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: ScrollController(),
                     children: TestViewModel.createModel(snap.data).widgets,
                   )
-                ),
-              )
+              ),
             );
           } else if (snap.hasError) {
             return ListView(
@@ -84,7 +83,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: showData(),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: showData()
+          )
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
