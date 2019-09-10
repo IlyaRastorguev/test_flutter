@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:test_flutter/networkUtils/api/image_views.dart';
 import 'package:test_flutter/networkUtils/api/test.dart';
 import 'package:test_flutter/view_models/error_view_model.dart';
+import 'package:test_flutter/view_models/main_screens/pictures_screen.dart';
+import 'package:test_flutter/view_models/main_screens/start_screen.dart';
+import 'package:test_flutter/view_models/main_screens/text_cards_screen.dart';
 import 'package:test_flutter/view_models/test_view_model.dart';
 
+import 'dto/picrute_dto.dart';
 import 'dto/test_dto.dart';
 
 void main() => runApp(MyApp());
@@ -31,50 +36,38 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
-  Future<CardList> test;
+  Future<CardList> textCards;
+  Future<ImageList> imageCards;
 
   void getUser(int selectIndex) {
     if (selectIndex == 1) {
       setState(() {
-        test = TestRequest.get().response;
+        textCards = TestRequest.get().response;
         index = selectIndex;
       });
-    } else
+    } else if (selectIndex == 2)
       setState(() {
-        test = null;
+        imageCards = PicturesRequest.get().response;
+        index = selectIndex;
+      });
+    else
+      setState(() {
+        textCards = null;
         index = selectIndex;
       });
   }
 
-  showData() {
-    if (test != null) {
-      return FutureBuilder<CardList>(
-        future: test,
-        builder: (context, snap) {
-          if (snap.hasData) {
-            return Container(
-              margin: const EdgeInsets.all(10.0),
-              child: Align(
-                  alignment: Alignment.topCenter,
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    controller: ScrollController(),
-                    children: TestViewModel.createModel(snap.data).widgets,
-                  )
-              ),
-            );
-          } else if (snap.hasError) {
-            return ListView(
-              shrinkWrap: false,
-              children: ErrorWidgetModel.init(snap.data.error).getErrorWidget(),
-            );
-          }
-
-          return Text('');
-        },
-      );
+  selectScreen()
+  {
+    switch (index) {
+      case 1:
+        return TextCardsScreen.init(textCards).getScreen();
+      case 2:
+        return PicturesCardsScreen.init(imageCards).getScreen();
+      case 0:
+      default:
+        return StartScreen.init().getScreen();
     }
-    return Text('');
   }
 
   @override
@@ -86,16 +79,18 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: showData()
+            child: selectScreen()
           )
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(Icons.accessibility), title: Text('TEsdgcshdc')),
+              icon: Icon(Icons.accessibility), title: Text('StartScreen')),
           BottomNavigationBarItem(
-              icon: Icon(Icons.pages), title: Text('GHJAFGShcsdc'))
+              icon: Icon(Icons.accessibility), title: Text('Pictures')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.pages), title: Text('TextCards'))
         ],
         currentIndex: index,
         onTap: getUser,
