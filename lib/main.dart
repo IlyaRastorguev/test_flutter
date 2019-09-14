@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:test_flutter/networkUtils/api/image_views.dart';
 import 'package:test_flutter/networkUtils/api/test.dart';
-import 'package:test_flutter/view_models/error_view_model.dart';
 import 'package:test_flutter/view_models/main_screens/pictures_screen.dart';
 import 'package:test_flutter/view_models/main_screens/start_screen.dart';
 import 'package:test_flutter/view_models/main_screens/text_cards_screen.dart';
-import 'package:test_flutter/view_models/test_view_model.dart';
 
 import 'dto/picrute_dto.dart';
 import 'dto/test_dto.dart';
