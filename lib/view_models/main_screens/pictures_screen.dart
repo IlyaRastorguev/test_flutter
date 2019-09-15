@@ -1,24 +1,20 @@
-
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:test_flutter/dto/picrute_dto.dart';
 import 'package:test_flutter/view_models/pictures_view.dart';
 
 import '../error_view_model.dart';
 
 class PicturesCardsScreen {
-
   final Future<ImageList> test;
 
   PicturesCardsScreen({this.test});
 
   factory PicturesCardsScreen.init(Future<ImageList> test) {
-    return PicturesCardsScreen(
-        test: test
-    );
+    return PicturesCardsScreen(test: test);
   }
 
-  getScreen () {
+  getScreen() {
     if (test != null) {
       return FutureBuilder<ImageList>(
         future: test,
@@ -32,8 +28,7 @@ class PicturesCardsScreen {
                     physics: const AlwaysScrollableScrollPhysics(),
                     controller: ScrollController(),
                     children: PicturesViewModel.createModel(snap.data).widgets,
-                  )
-              ),
+                  )),
             );
           } else if (snap.hasError) {
             return ListView(
@@ -49,5 +44,4 @@ class PicturesCardsScreen {
 
     return Text('');
   }
-
 }
